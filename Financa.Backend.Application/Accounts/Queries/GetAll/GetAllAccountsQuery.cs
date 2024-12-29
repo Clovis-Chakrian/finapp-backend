@@ -3,6 +3,6 @@ using Financa.Backend.Domain.Accounts;
 
 namespace Financa.Backend.Application.Accounts.Queries.GetAll;
 
-public class GetAllAccountsQuery : IQuery<IEnumerable<Account>>
+public class GetAllAccountsQuery : IQuery<IEnumerable<ListAccountDto>>
 {
 }

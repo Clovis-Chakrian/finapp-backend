@@ -24,6 +24,6 @@ public class AccountsController(IMediatorHandler mediator) : AbstractController
   [HttpGet]
   public async Task<IActionResult> GetAll()
   {
-    return CustomResponse(await _mediator.SendQuery<GetAllAccountsQuery, IEnumerable<Account>>(new GetAllAccountsQuery()));
+    return CustomResponse(await _mediator.SendQuery<GetAllAccountsQuery, IEnumerable<ListAccountDto>>(new GetAllAccountsQuery()));
   }
 }

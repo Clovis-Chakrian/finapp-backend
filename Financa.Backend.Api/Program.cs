@@ -4,15 +4,17 @@ using Financa.Backend.BuildingBlocks.CQRS;
 using Financa.Backend.BuildingBlocks.Data;
 using Financa.Backend.Infra.Contexts;
 using Financa.Backend.Infra.Repositories;
-using System.IO;
 using System.IO.Abstractions;
 using IConfiguration = Financa.Backend.BuildingBlocks.IConfiguration;
+using Financa.Backend.BuildingBlocks.CQRS.OpenBehaviors;
+using Financa.Backend.BuildingBlocks.Exceptions;
+using Financa.Backend.BuildingBlocks.Controllers.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-var currentAssembly = Assembly.GetAssembly(typeof(Program)) ?? throw new Exception("Error while loading program Assemblies.");
+var currentAssembly = Assembly.GetAssembly(typeof(Program)) ?? throw new RuntimeException("Error while loading program Assemblies.");
 
 Configuration configuration = new()
 {
@@ -23,7 +25,7 @@ Configuration configuration = new()
         .Union([currentAssembly])
         .ToList(),
 
-    OpenBehaviors = []
+    OpenBehaviors = [typeof(ValidationOpenBahavior<,>)]
 };
 
 builder.Services.AddSingleton<IConfiguration>(configuration);
@@ -45,29 +47,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-
-// var summaries = new[]
-// {
-//     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-// };
-
-// app.MapGet("/weatherforecast", () =>
-// {
-//     var forecast = Enumerable.Range(1, 5).Select(index =>
-//         new WeatherForecast
-//         (
-//             DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-//             Random.Shared.Next(-20, 55),
-//             summaries[Random.Shared.Next(summaries.Length)]
-//         ))
-//         .ToArray();
-//     return forecast;
-// })
-// .WithName("GetWeatherForecast")
-// .WithOpenApi();
-
 app.Run();

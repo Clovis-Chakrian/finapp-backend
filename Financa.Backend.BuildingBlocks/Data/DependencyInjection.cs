@@ -1,5 +1,6 @@
 using System.Reflection;
 using Financa.Backend.BuildingBlocks.Data.Repositories;
+using Financa.Backend.BuildingBlocks.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -42,11 +43,11 @@ public static class DependencyInjection
 
   private static string GetConnectionString()
   {
-    var host = Environment.GetEnvironmentVariable("DB_HOST") ?? throw new Exception("The env variable DB_HOST is required.");
-    var username = Environment.GetEnvironmentVariable("DB_USERNAME") ?? throw new Exception("The env variable DB_USERNAME is required.");
-    var password = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? throw new Exception("The env variable DB_PASSWORD is required.");
-    var port = Environment.GetEnvironmentVariable("DB_PORT") ?? throw new Exception("The env variable DB_PORT is required.");
-    var database = Environment.GetEnvironmentVariable("DB_DATABASE") ?? throw new Exception("The env variable DB_DATABASE is required.");
+    var host = Environment.GetEnvironmentVariable("DB_HOST") ?? throw new RuntimeException("The env variable DB_HOST is required.");
+    var username = Environment.GetEnvironmentVariable("DB_USERNAME") ?? throw new RuntimeException("The env variable DB_USERNAME is required.");
+    var password = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? throw new RuntimeException("The env variable DB_PASSWORD is required.");
+    var port = Environment.GetEnvironmentVariable("DB_PORT") ?? throw new RuntimeException("The env variable DB_PORT is required.");
+    var database = Environment.GetEnvironmentVariable("DB_DATABASE") ?? throw new RuntimeException("The env variable DB_DATABASE is required.");
 
     return $"Host={host}; Username={username}; Password={password}; Port={port}; Database={database}";
   }
